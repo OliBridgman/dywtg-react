@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 
 import { formatDateToString } from "common/helpers";
+import { fadeIn, slideLeft } from "common/animations";
 
 export default class FixtureListItem extends Component {
   // Create the results string from the team scores
@@ -35,28 +37,102 @@ export default class FixtureListItem extends Component {
 
   render() {
     return (
-      <li>
+      <ListItem>
         <p>{formatDateToString(this.props.fixture.gameDate)}</p>
         <p>{this.getTeamString(this.props.fixture)}</p>
         {this.props.showResults ? (
-          <div className="fixture-results">
-            <p>{this.getGameResultsData(this.props.fixture)}</p>
+          <FixtureListItemResults>
+            <FixtureScore as="p">
+              {this.getGameResultsData(this.props.fixture)}
+            </FixtureScore>
             {this.props.fixture.highlightsLink ? (
-              <a
+              <FixtureHighlights
+                as="a"
                 href={this.props.fixture.highlightsLink}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 View highlights
-              </a>
+              </FixtureHighlights>
             ) : (
               ""
             )}
-          </div>
+          </FixtureListItemResults>
         ) : (
           ""
         )}
-      </li>
+      </ListItem>
     );
   }
 }
+
+const ListItem = styled.li`
+  margin-bottom: 1.5em;
+  animation: fade-in 500ms;
+  list-style-type: none;
+  > p {
+    margin: 5px 0;
+    &:nth-child(2) {
+      font-weight: 900;
+    }
+  }
+`;
+
+const Button = styled.button`
+  display: inline-block;
+  width: 150px;
+  padding: 8px;
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.9em;
+  background-color: var(--secondary-colour);
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  border: 1px solid transparent;
+  text-decoration: none;
+  animation: ${fadeIn} 500ms;
+  :hover,
+  :focus {
+    background-color: var(--primary-colour);
+  }
+`;
+
+const FixtureScore = styled(Button)`
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  ::after {
+    content: "Reveal Score...";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 7px;
+    cursor: default;
+    background-color: var(--primary-colour);
+    border: 1px dashed white;
+  }
+  :hover::after {
+    background-color: var(--secondary-colour);
+    animation: ${slideLeft} 1s;
+    animation-timing-function: cubic-bezier(1, 0.005, 1, 0.505);
+    animation-fill-mode: forwards;
+  }
+`;
+
+const FixtureHighlights = styled(Button)`
+  @media (min-width: 521px) {
+    margin-left: 10px;
+  }
+`;
+
+const FixtureListItemResults = styled.div`
+  display: flex;
+  margin-top: 0.5em;
+  @media (max-width: 520px) {
+    flex-direction: column;
+  }
+`;

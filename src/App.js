@@ -1,12 +1,14 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 
 import teams from "teamsList";
 import Api from "services/Api";
 import { getDateForUrl } from "common/helpers";
+import { fadeIn } from "common/animations";
 
 import FixturesList from "components/FixturesList";
-import Footer from "components/Footer";
-import Header from "components/Header";
+import AppFooter from "components/AppFooter";
+import AppHeader from "components/AppHeader";
 import DivisionTable from "components/DivisionTable";
 import ColourChanger from "components/ColourChanger";
 
@@ -127,47 +129,111 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="wrapper">
+      <AppContainer>
         <ColourChanger
           teams={this.teams}
           selectedTeamId={this.state.selectedTeamId}
         />
-        <Header
+        <AppHeader
           teams={this.teams}
           onSelectTeamChanged={this.onSelectTeamChanged}
           selectedTeamId={this.state.selectedTeamId}
         />
-        <div className="container">
-          <section className="panel panel-next-fixtures">
-            <h2>
+        <PanelContainer>
+          <Panel>
+            <PanelHeading>
               <i className="far fa-calendar-alt" /> Next Fixtures
-            </h2>
+            </PanelHeading>
             <FixturesList fixtures={this.state.nextFixtures} />
-          </section>
+          </Panel>
 
-          <section className="panel panel-latest-results">
-            <h2>
+          <Panel>
+            <PanelHeading>
               <i className="fas fa-history" /> Latest Results
-            </h2>
+            </PanelHeading>
             <FixturesList
               fixtures={this.state.latestFixtures}
               showResults={true}
               currentTeamId={this.state.selectedTeamId}
             />
-          </section>
+          </Panel>
 
-          <section className="panel panel-division-table">
-            <h2>
+          <Panel>
+            <PanelHeading>
               <i className="fas fa-trophy" /> {this.state.division.name}
-            </h2>
+            </PanelHeading>
             <DivisionTable
               teams={this.state.division.teams}
               selectedTeamId={this.state.selectedTeamId}
             />
-          </section>
-        </div>
-        <Footer />
-      </div>
+          </Panel>
+        </PanelContainer>
+        <AppFooter />
+      </AppContainer>
     );
   }
 }
+
+const AppContainer = styled.div`
+  font-family: Roboto, sans-serif;
+  color: white;
+
+  @media (min-width: 631px) {
+    min-height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 50px auto 50px;
+    grid-template-areas:
+      "header header header"
+      "main main main"
+      "footer footer footer";
+  }
+`;
+
+const PanelContainer = styled.div`
+  grid-area: main;
+  @media (min-width: 1081px) {
+    display: flex;
+  }
+`;
+
+const Panel = styled.section`
+  padding: 20px 40px;
+  flex-grow: 1;
+  flex-basis: 33.33333%;
+
+  :nth-child(1) {
+    background-color: var(--primary-colour);
+    h2,
+    p {
+      color: white;
+      animation: ${fadeIn} 500ms;
+    }
+  }
+
+  :nth-child(2) {
+    background-color: white;
+    color: var(--secondary-colour);
+    h2 {
+      border-bottom-color: var(--primary-colour);
+    }
+  }
+
+  :nth-child(3) {
+    background-color: var(--secondary-colour);
+  }
+
+  @media (max-width: 421px) {
+    padding: 20px 20px;
+  }
+
+  @media (max-width: 1081px) {
+    padding: 20px 80px;
+  }
+`;
+
+const PanelHeading = styled.h2`
+  letter-spacing: 1.5px;
+  padding-bottom: 5px;
+  border-bottom: 5px solid rgba(255, 255, 255, 0.5);
+`;

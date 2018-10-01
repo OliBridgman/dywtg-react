@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 
 export default class ColourChanger extends Component {
   cssVars = {
@@ -43,6 +43,6 @@ export default class ColourChanger extends Component {
   }
 
   render() {
-    return <div />;
+    return "";
   }
 }
