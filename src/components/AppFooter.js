@@ -10,7 +10,7 @@ const AppFooter = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          View on GitHub
+          View original on GitHub
           <span className="fab fa-github fa-lg" />
         </FooterLink>
       </FooterSection>
