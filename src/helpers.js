@@ -54,3 +54,5 @@ export function createElementWithText(tagName, text) {
     element.appendChild(textNode);
     return element;
 }
+
+export const createGet = path => object => path.reduce((a, b) => (a && a[b]) ? a[b] : null, object)
