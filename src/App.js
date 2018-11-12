@@ -5,12 +5,14 @@ import teams from "teamsList";
 import Api from "services/Api";
 import { getDateForUrl } from "common/helpers";
 import { fadeIn } from "common/animations";
-
+import { createGet } from './helpers';
 import FixturesList from "components/FixturesList";
 import AppFooter from "components/AppFooter";
 import AppHeader from "components/AppHeader";
 import DivisionTable from "components/DivisionTable";
 import ColourChanger from "components/ColourChanger";
+
+const getHighlightsLink = createGet(['data', 'media', 'epg', 2, 'items', 0, 'playbacks', 9, 'url'])
 
 export default class App extends Component {
   api = new Api();
@@ -69,13 +71,7 @@ export default class App extends Component {
       const latestFixtures = response.data.dates.slice(-limit).reverse();
       latestFixtures.forEach((fixture, index) => {
         this.api.getHighlights(fixture.games[0].content.link).then(response => {
-          let highlightsLink;
-          try {
-            highlightsLink =
-              response.data.media.epg[2].items[0].playbacks[9].url;
-          } catch (error) {
-            console.log("No highlight link found");
-          } finally {
+            const highlightsLink = getHighlightsLink(response)
             if (highlightsLink) {
               const updatedFeatures = this.state.latestFixtures.map(
                 (fixture, i) => {
@@ -87,7 +83,6 @@ export default class App extends Component {
               );
               this.setState({ latestFixtures: updatedFeatures });
             }
-          }
         });
       });
       this.setState({ latestFixtures });
