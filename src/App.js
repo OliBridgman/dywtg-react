@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import styled from "styled-components";
 
 import teams from "teamsList";
-import Api from "services/Api";
-import { getDateForUrl } from "common/helpers";
 import { fadeIn } from "common/animations";
 import { createGet } from './helpers';
 import FixturesList from "components/FixturesList";
@@ -11,16 +9,14 @@ import AppFooter from "components/AppFooter";
 import AppHeader from "components/AppHeader";
 import DivisionTable from "components/DivisionTable";
 import ColourChanger from "components/ColourChanger";
+import NextFixtures from 'components/NextFixtures';
 
 const getHighlightsLink = createGet(['data', 'media', 'epg', 2, 'items', 0, 'playbacks', 9, 'url'])
 
 export default class App extends Component {
-  api = new Api();
   teams = teams;
   state = {
     selectedTeamId: null,
-    nextFixtures: [],
-    latestFixtures: [],
     division: {
       name: "Division",
       teams: []
@@ -30,40 +26,22 @@ export default class App extends Component {
   // Main team change event
   // Is triggered on load and when a new team is selected
   onSelectTeamChanged = teamId => {
-    const fixturesLimit = 5;
     this.setUrlHash(teamId);
     this.setState({
       selectedTeamId: teamId
     });
 
-    // Get the information for the selected team
-    this.getNextFixtures(
-      {
-        teamId: teamId,
-        startDate: getDateForUrl(),
-        endDate: getDateForUrl(1)
-      },
-      fixturesLimit
-    );
-    this.getLatestFixtures(
-      {
-        teamId: teamId,
-        startDate: getDateForUrl(-1),
-        endDate: getDateForUrl()
-      },
-      fixturesLimit
-    );
-    this.getDivisionTeams(teamId);
+    // // Get the information for the selected team
+    // this.getLatestFixtures(
+    //   {
+    //     teamId: teamId,
+    //     startDate: getDateForUrl(-1),
+    //     endDate: getDateForUrl()
+    //   },
+    //   fixturesLimit
+    // );
+    // this.getDivisionTeams(teamId);
   };
-
-  // Get the selected teams next fixtures
-  getNextFixtures(params, limit) {
-    this.api.getSchedule(params).then(response => {
-      this.setState({
-        nextFixtures: response.data.dates.slice(0, limit)
-      });
-    });
-  }
 
   // Get the selected teams recently played fixtures
   getLatestFixtures(params, limit) {
@@ -139,18 +117,22 @@ export default class App extends Component {
             <PanelHeading>
               <i className="far fa-calendar-alt" /> Next Fixtures
             </PanelHeading>
-            <FixturesList fixtures={this.state.nextFixtures} />
+            <NextFixtures teamId={this.state.selectedTeamId}>
+              {({fixtures}) => (
+                fixtures ? <FixturesList fixtures={fixtures} /> : null
+              )}
+            </NextFixtures>
           </Panel>
 
           <Panel>
             <PanelHeading>
               <i className="fas fa-history" /> Latest Results
             </PanelHeading>
-            <FixturesList
-              fixtures={this.state.latestFixtures}
-              showResults={true}
-              currentTeamId={this.state.selectedTeamId}
-            />
+              { /*<FixturesList
+                fixtures={this.state.latestFixtures}
+                showResults={true}
+                currentTeamId={this.state.selectedTeamId}
+              /> */ }
           </Panel>
 
           <Panel>
