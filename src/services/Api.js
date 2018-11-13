@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default class Api {
+class Api {
   apiConfig = {
     url: "https://statsapi.web.nhl.com",
     version: "/api/v1"
@@ -47,3 +47,5 @@ export default class Api {
     );
   }
 }
+
+export default new Api()
