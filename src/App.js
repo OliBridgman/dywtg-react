@@ -10,6 +10,7 @@ import AppHeader from "components/AppHeader";
 import DivisionTable from "components/DivisionTable";
 import ColourChanger from "components/ColourChanger";
 import NextFixtures from 'components/NextFixtures';
+import LatestFixtures from 'components/LatestFixtures';
 
 const getHighlightsLink = createGet(['data', 'media', 'epg', 2, 'items', 0, 'playbacks', 9, 'url'])
 
@@ -31,15 +32,6 @@ export default class App extends Component {
       selectedTeamId: teamId
     });
 
-    // // Get the information for the selected team
-    // this.getLatestFixtures(
-    //   {
-    //     teamId: teamId,
-    //     startDate: getDateForUrl(-1),
-    //     endDate: getDateForUrl()
-    //   },
-    //   fixturesLimit
-    // );
     // this.getDivisionTeams(teamId);
   };
 
@@ -128,11 +120,11 @@ export default class App extends Component {
             <PanelHeading>
               <i className="fas fa-history" /> Latest Results
             </PanelHeading>
-              { /*<FixturesList
-                fixtures={this.state.latestFixtures}
-                showResults={true}
-                currentTeamId={this.state.selectedTeamId}
-              /> */ }
+            <LatestFixtures teamId={this.state.selectedTeamId}>
+              {({fixtures}) => (
+                fixtures ? <FixturesList fixtures={fixtures} showResults={true} currentTeamId={this.state.selectedTeamId} /> : null
+              )}
+            </LatestFixtures>
           </Panel>
 
           <Panel>
