@@ -24,22 +24,15 @@ export default class FetchDivision extends Component {
       return this.props.children({division: this.state.division})
     }
   
-    _fetchDivisions (teamId) {
-      API.getStandingsByDivision(teamId).then(response => {
-        response.data.records.forEach(standing => {
-            standing.teamRecords.forEach(teamRecord => {
-              if (teamId === teamRecord.team.id) {
-                this.setState({
-                  division: {
-                    name: `${standing.division.name} Division`,
-                    teams: standing.teamRecords
-                  }
-                });
-                return;
-              }
-            });
-        });
-      })
+    async _fetchDivisions (teamId) {
+      const { data: { records } } = await API.getStandingsByDivision(teamId)
+      const [standing] = records.filter(r => r.teamRecords.filter(tr => tr.team.id === teamId).length)
+      this.setState({
+        division: {
+          name: `${standing.division.name} Division`,
+          teams: standing.teamRecords
+        }
+      });
     }
 
     _shouldRefetch(prevProps, props) {
