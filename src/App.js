@@ -61,25 +61,6 @@ export default class App extends Component {
     });
   }
 
-  // Get the division of the selected team
-  getDivisionTeams(teamId) {
-    this.api.getStandingsByDivision(teamId).then(response => {
-      response.data.records.forEach(standing => {
-        standing.teamRecords.forEach(teamRecord => {
-          if (teamId === teamRecord.team.id) {
-            this.setState({
-              division: {
-                name: `${standing.division.name} Division`,
-                teams: standing.teamRecords
-              }
-            });
-            return;
-          }
-        });
-      });
-    });
-  }
-
   // Set URL hash
   setUrlHash(teamId) {
     document.location.hash = `#${teamId}`;
