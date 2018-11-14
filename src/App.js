@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import teams from "teamsList";
 import { fadeIn } from "common/animations";
-import { createGet } from './helpers';
 import FixturesList from "components/FixturesList";
 import AppFooter from "components/AppFooter";
 import AppHeader from "components/AppHeader";
@@ -14,16 +13,10 @@ import FetchDivision from 'components/FetchDivision';
 
 import { getDateForUrl } from "common/helpers";
 
-const getHighlightsLink = createGet(['data', 'media', 'epg', 2, 'items', 0, 'playbacks', 9, 'url'])
-
 export default class App extends Component {
   teams = teams;
   state = {
-    selectedTeamId: null,
-    division: {
-      name: "Division",
-      teams: []
-    }
+    selectedTeamId: null
   };
 
   // Main team change event
@@ -36,30 +29,6 @@ export default class App extends Component {
 
     // this.getDivisionTeams(teamId);
   };
-
-  // Get the selected teams recently played fixtures
-  getLatestFixtures(params, limit) {
-    this.api.getSchedule(params).then(response => {
-      const latestFixtures = response.data.dates.slice(-limit).reverse();
-      latestFixtures.forEach((fixture, index) => {
-        this.api.getHighlights(fixture.games[0].content.link).then(response => {
-            const highlightsLink = getHighlightsLink(response)
-            if (highlightsLink) {
-              const updatedFeatures = this.state.latestFixtures.map(
-                (fixture, i) => {
-                  if (i === index) {
-                    fixture.games[0].highlightsLink = highlightsLink;
-                  }
-                  return fixture;
-                }
-              );
-              this.setState({ latestFixtures: updatedFeatures });
-            }
-        });
-      });
-      this.setState({ latestFixtures });
-    });
-  }
 
   // Set URL hash
   setUrlHash(teamId) {
