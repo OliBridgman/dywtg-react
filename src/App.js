@@ -9,8 +9,9 @@ import AppFooter from "components/AppFooter";
 import AppHeader from "components/AppHeader";
 import DivisionTable from "components/DivisionTable";
 import ColourChanger from "components/ColourChanger";
-import NextFixtures from 'components/NextFixtures';
-import LatestFixtures from 'components/LatestFixtures';
+import FetchFixtures from 'components/FetchFixtures';
+
+import { getDateForUrl } from "common/helpers";
 
 const getHighlightsLink = createGet(['data', 'media', 'epg', 2, 'items', 0, 'playbacks', 9, 'url'])
 
@@ -109,22 +110,32 @@ export default class App extends Component {
             <PanelHeading>
               <i className="far fa-calendar-alt" /> Next Fixtures
             </PanelHeading>
-            <NextFixtures teamId={this.state.selectedTeamId}>
+            <FetchFixtures
+              teamId={this.state.selectedTeamId}
+              startDate={getDateForUrl()}
+              endDate={getDateForUrl(1)}>
               {({fixtures}) => (
-                fixtures ? <FixturesList fixtures={fixtures} /> : null
+                fixtures ? <FixturesList fixtures={fixtures.slice(0, 5)} /> : null
               )}
-            </NextFixtures>
+            </FetchFixtures>
           </Panel>
 
           <Panel>
             <PanelHeading>
               <i className="fas fa-history" /> Latest Results
             </PanelHeading>
-            <LatestFixtures teamId={this.state.selectedTeamId}>
+            <FetchFixtures
+              teamId={this.state.selectedTeamId}
+              startDate={getDateForUrl(-1)}
+              endDate={getDateForUrl()}>
               {({fixtures}) => (
-                fixtures ? <FixturesList fixtures={fixtures} showResults={true} currentTeamId={this.state.selectedTeamId} /> : null
+                fixtures ?
+                  <FixturesList
+                    fixtures={fixtures.slice(-5).reverse()}
+                    showResults={true}
+                    currentTeamId={this.state.selectedTeamId} /> : null
               )}
-            </LatestFixtures>
+            </FetchFixtures>
           </Panel>
 
           <Panel>
