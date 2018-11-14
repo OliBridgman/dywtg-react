@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import FetchHighlight from './FetchHighlight';
 
 import { formatDateToString } from "common/helpers";
 import { fadeIn, slideLeft } from "common/animations";
+
+import { createGet } from '../helpers';
+
+const getLink = createGet(['content', 'link'])
 
 export default class FixtureListItem extends Component {
   // Create the results string from the team scores
@@ -36,27 +41,27 @@ export default class FixtureListItem extends Component {
   }
 
   render() {
+    const { fixture, showResults } = this.props
     return (
       <ListItem>
-        <p>{formatDateToString(this.props.fixture.gameDate)}</p>
-        <p>{this.getTeamString(this.props.fixture)}</p>
-        {this.props.showResults ? (
+        <p>{formatDateToString(fixture.gameDate)}</p>
+        <p>{this.getTeamString(fixture)}</p>
+        {showResults ? (
           <FixtureListItemResults>
             <FixtureScore as="p">
-              {this.getGameResultsData(this.props.fixture)}
+              {this.getGameResultsData(fixture)}
             </FixtureScore>
-            {this.props.fixture.highlightsLink ? (
-              <FixtureHighlights
-                as="a"
-                href={this.props.fixture.highlightsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+            <FetchHighlight link={getLink(fixture)}>
+              {({link}) => link && (
+                <FixtureHighlights
+                  as="a"
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer">
                 View highlights
               </FixtureHighlights>
-            ) : (
-              ""
-            )}
+              )}
+            </FetchHighlight>
           </FixtureListItemResults>
         ) : (
           ""
