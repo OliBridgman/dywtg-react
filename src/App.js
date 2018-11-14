@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import styled from "styled-components";
 
 import teams from "teamsList";
@@ -10,6 +10,7 @@ import AppHeader from "components/AppHeader";
 import DivisionTable from "components/DivisionTable";
 import ColourChanger from "components/ColourChanger";
 import FetchFixtures from 'components/FetchFixtures';
+import FetchDivision from 'components/FetchDivision';
 
 import { getDateForUrl } from "common/helpers";
 
@@ -139,13 +140,16 @@ export default class App extends Component {
           </Panel>
 
           <Panel>
-            <PanelHeading>
-              <i className="fas fa-trophy" /> {this.state.division.name}
-            </PanelHeading>
-            <DivisionTable
-              teams={this.state.division.teams}
-              selectedTeamId={this.state.selectedTeamId}
-            />
+          <FetchDivision teamId={this.state.selectedTeamId}>
+            {({division}) => (
+              <Fragment>
+                <PanelHeading>
+                  <i className="fas fa-trophy" /> {division.name}
+                </PanelHeading>
+                <DivisionTable teams={division.teams} selectedTeamId={this.state.selectedTeamId} />
+              </Fragment>
+            )}
+            </FetchDivision>
           </Panel>
         </PanelContainer>
         <AppFooter />
