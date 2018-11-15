@@ -10,6 +10,7 @@ import DivisionTable from "components/DivisionTable";
 import ColourChanger from "components/ColourChanger";
 import FetchFixtures from 'components/FetchFixtures';
 import FetchDivision from 'components/FetchDivision';
+import Router from 'components/Router';
 
 import { getDateForUrl } from "common/helpers";
 
@@ -22,18 +23,10 @@ export default class App extends Component {
   // Main team change event
   // Is triggered on load and when a new team is selected
   onSelectTeamChanged = teamId => {
-    this.setUrlHash(teamId);
     this.setState({
       selectedTeamId: teamId
     });
-
-    // this.getDivisionTeams(teamId);
   };
-
-  // Set URL hash
-  setUrlHash(teamId) {
-    document.location.hash = `#${teamId}`;
-  }
 
   // Set team from url hash (default to Canucks if none present)
   getTeamFromUrlHash() {
@@ -51,6 +44,7 @@ export default class App extends Component {
           teams={this.teams}
           selectedTeamId={this.state.selectedTeamId}
         />
+        <Router document={document} teamId={this.state.selectedTeamId} />
         <AppHeader
           teams={this.teams}
           onSelectTeamChanged={this.onSelectTeamChanged}
