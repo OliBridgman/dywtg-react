@@ -15,6 +15,9 @@ export default class FetchFixtures extends Component {
     } 
   
     render () {
+      if (this.props.render) {
+        return this.props.render({fixtures: this.state.fixtures})
+      }
       return this.props.children({fixtures: this.state.fixtures})
     }
   

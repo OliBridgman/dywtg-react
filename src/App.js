@@ -58,11 +58,11 @@ export default class App extends Component {
             <FetchFixtures
               teamId={this.state.selectedTeamId}
               startDate={getDateForUrl()}
-              endDate={getDateForUrl(1)}>
-              {({fixtures}) => (
-                fixtures ? <FixturesList fixtures={fixtures.slice(0, 5)} /> : null
-              )}
-            </FetchFixtures>
+              endDate={getDateForUrl(1)} render={
+                ({fixtures}) => (
+                  fixtures ? <FixturesList fixtures={fixtures.slice(0, 5)} /> : null
+                )
+              } />
           </Panel>
 
           <Panel>
